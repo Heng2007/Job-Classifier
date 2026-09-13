@@ -69,6 +69,8 @@ KAGGLE_SAMPLE_SIZE = 1200
 RANDOM_SEED = 42            
 # Batch Number
 BATCH_SIZE = 40    
+#Leaning Rate
+LEARNING_RATE = 0.01
 
 # --- Junior-eligibility title regexes (Streamlit tab 2 filter) ---
 JUNIOR_TITLE_PATTERN = r"\b(?:intern|interns|internship|internships|junior|new grad|new graduate|research assistant)\b"
