@@ -26,6 +26,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
+from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer 
@@ -67,19 +68,6 @@ def logistic_predict(input):
 
 # MLP-------------------------------------------------------------------------------------------------------------------
 
-# Order of steps:
-
-# Encode labels — LabelEncoder fit on Y_train, then .transform on Y_test with the same fitted encoder. You'll need it again at the end to turn 
-# predictions back into category names.
-# Tensors — .toarray() → torch.tensor(..., dtype=torch.float32) for both feature matrices; labels as torch.long.
-# Model — nn.Sequential: Linear(34217 → hidden) → ReLU → Dropout → Linear(hidden → 5). Output raw scores, no softmax.
-# Loss + optimizer — nn.CrossEntropyLoss (it applies softmax internally, which is why step 3 doesn't) and torch.optim.Adam.
-# Training loop — TensorDataset + DataLoader for batching, then per batch: zero grads → forward → loss → backward → step.
-# Evaluate — model.eval() + torch.no_grad(), argmax the logits, inverse_transform back to strings, feed to the same classification_report. Compare the macro avg to LogReg's 0.74.
-# Two things that will bite: CrossEntropyLoss needs a weight= argument to
-#  match the class_weight="balanced" you gave LogReg, otherwise the comparison isn't
-#  fair and the net will just learn "Not relevant". And set torch.manual_seed(config.RANDOM_SEED) 
-# or your numbers move every run
 
 x_train_tensor = torch.tensor(fitted_x_train.todense(), dtype =torch.float32) 
 x_test_tensor = torch.tensor(fitted_x_test.todense(), dtype = torch.float32) 
@@ -103,13 +91,16 @@ train_loader = DataLoader(train_dataset, config.BATCH_SIZE, shuffle = True)
 test_loader = DataLoader(test_dataset, config.BATCH_SIZE, shuffle = False )
 
 
+torch.manual_seed(config.RANDOM_SEED)
 
 #The basic multilayer perception model
 #Sequential replaced the class and forward()
 mlp_model = nn.modules.Sequential(nn.Linear(len(x_train_tensor[1]), 256),
                                   nn.ReLU(),
+                                  nn.Linear(256,64),
+                                  nn.ReLU(),
                                   nn.Dropout(p = 0.5),
-                                  nn.Linear(256,len(label_encoder.classes_)),
+                                  nn.Linear(64,len(label_encoder.classes_)),
                                   )
 
 
@@ -117,12 +108,40 @@ mlp_model = nn.modules.Sequential(nn.Linear(len(x_train_tensor[1]), 256),
 current_loss = 0
 all_losses = []
 mlp_model.train()
-optimizer = torch.optim.SGD(mlp_model.parameters(), lr = config.LEARNING_RATE)
-output = mlp_model(x_train_tensor)
+optimizer = torch.optim.Adam(mlp_model.parameters(), lr = config.LEARNING_RATE)
+# optimizer = torch.optim.SGD(mlp_model.parameters(), lr = config.LEARNING_RATE)
+counts = np.bincount(y_train_tensor)   
+
+# w_c = N / (K * n_c) where N is total examples, K is number of classes, n_c is the count of class c
+# weights = torch.tensor(len(x_train_tensor[1])/(len(label_encoder.classes_) * counts), dtype=torch.float) 
+# critation = nn.CrossEntropyLoss(weight= weights)
 critation = nn.CrossEntropyLoss()
-loss =critation(output, y_train_tensor)
         
-print(loss)
+def train(model: nn.Sequential, n_epoch = 10):
+        current_loss = 0
+        all_losses = []
 
 
+        for epoch in range(1, n_epoch+1):
+                model.zero_grad()
+                for index, (x_batch, y_batch) in enumerate(train_loader):
+                        output = model.forward(x_batch)
+                        loss = critation(output, y_batch)
 
+                        loss.backward()
+                        optimizer.step()
+                        optimizer.zero_grad()
+
+                        current_loss += loss.item()
+                average_loss = current_loss/len(train_loader)
+                # print(average_loss)
+                all_losses.append(average_loss)
+                current_loss = 0
+
+train(mlp_model)
+mlp_model.train(False)
+with torch.no_grad():
+    predictions = mlp_model(x_test_tensor).argmax(1)
+mlp_result = classification_report(y_test_tensor, predictions, target_names=label_encoder.classes_)
+
+print(mlp_result)
