@@ -29,6 +29,19 @@ A personal tool that classifies job postings, scores them against my current ski
 | **macro avg** | 0.73 | 0.75 | 0.74 | 1328 |
 | **weighted avg** | 0.94 | 0.93 | 0.94 | 1328 |
 
+### Multilayer Perceptron
+
+| class | precision | recall | f1-score | support |
+|------------------------------|-----------|--------|----------|---------|
+| Data engineering / analytics | 0.47 | 0.38 | 0.42 | 21 |
+| Machine learning / AI | 1.00 | 0.75 | 0.86 | 52 |
+| Not relevant | 0.96 | 0.97 | 0.97 | 1038 |
+| Research assistant | 0.61 | 0.63 | 0.62 | 27 |
+| Software engineering | 0.88 | 0.90 | 0.89 | 190 |
+| **accuracy** | | | 0.94 | 1328 |
+| **macro avg** | 0.78 | 0.73 | 0.75 | 1328 |
+| **weighted avg** | 0.94 | 0.94 | 0.94 | 1328 |
+
 ## Limitations
 1. Since the original category, `NLP / LLM` and `Machain Learning`, are hard to differ. They are collapsed into one category, the cost is that the model can no longer find a job specicifically for `NLP / LLM` or specifically for `Machain Learning`. 
 2. Only single digit number of `quant/finance` job present in the 6 thousands postings in training data, therefore the category is removed. The cost is that the model can no longer identify `quant/finance` jobs.
