@@ -13,3 +13,15 @@ CLAUDE.md
 practice.sql
 needs.zip
 instruction/
+
+# Docstring-only stubs: not started yet, so kept off GitHub.
+# When you start writing one, delete its line here, then `git add` the file.
+analysis/match_scoring.py
+analysis/semantic_search.py
+app/streamlit_app.py
+ml/embeddings.py
+ml/tune.py
+pipeline/weekly_update.py
+tests/test_combine.py
+tests/test_database.py
+tests/test_taxonomy.py
