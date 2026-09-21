@@ -71,6 +71,9 @@ RANDOM_SEED = 42
 BATCH_SIZE = 40    
 #Leaning Rate
 LEARNING_RATE = 0.01
+#Model Name
+MODEL_NAME_MLP = "Multilayer Perceptron"
+MODEL_NAME_LOG = "Logistic Regression"
 
 # --- Junior-eligibility title regexes (Streamlit tab 2 filter) ---
 JUNIOR_TITLE_PATTERN = r"\b(?:intern|interns|internship|internships|junior|new grad|new graduate|research assistant)\b"

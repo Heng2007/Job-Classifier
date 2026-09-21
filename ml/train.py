@@ -25,6 +25,8 @@ import sqlite3
 import torch
 import torch.nn as nn
 import numpy as np
+import joblib
+import datetime
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
@@ -54,16 +56,16 @@ vectorizer = TfidfVectorizer()
 fitted_x_train = vectorizer.fit_transform(X_train)
 fitted_x_test = vectorizer.transform(X_test)
 
-
+joblib.dump(vectorizer, config.MODELS_DIR +'/vectorizer.joblib')
 
 
 # Logistic Regression--------------------------------------------------------------------------------------------------
-model = LogisticRegression(C = 100, class_weight = "balanced", solver= "lbfgs", max_iter= 1000).fit(fitted_x_train, Y_train)
+LogReg = LogisticRegression(C = 100, class_weight = "balanced", solver= "lbfgs", max_iter= 1000).fit(fitted_x_train, Y_train)
 
 
 def logistic_predict(input):
         """Return the predicted outcome(s) as a numpy array of label strings."""
-        model_prediction = model.predict(input)
+        model_prediction = LogReg.predict(input)
         return model_prediction
 
 # MLP-------------------------------------------------------------------------------------------------------------------
@@ -140,8 +142,30 @@ def train(model: nn.Sequential, n_epoch = 10):
 
 train(mlp_model)
 mlp_model.train(False)
+
+
+joblib.dump(mlp_model,config.MODELS_DIR+'/mlp.joblib')
+joblib.dump(label_encoder, config.MODELS_DIR + '/encoder.joblib')
+
+
 with torch.no_grad():
     predictions = mlp_model(x_test_tensor).argmax(1)
-mlp_result = classification_report(y_test_tensor, predictions, target_names=label_encoder.classes_)
 
-print(mlp_result)
+
+con = sqlite3.connect(config.DB_PATH)
+cur = con.cursor()
+
+mlp_result = classification_report(y_test_tensor, predictions, target_names=label_encoder.classes_, output_dict = True)
+
+cur.execute('INSERT INTO model_runs(run_date, model_name, macro_f1, notes) VALUES(?,?,?,?)',
+            (datetime.date.today().isoformat(), config.MODEL_NAME_MLP, mlp_result['macro avg']['f1-score'], " First version Multilayer Perceptron" )) # type: ignore
+
+LogReg_result = classification_report(Y_test, LogReg.predict(fitted_x_test), output_dict= True)
+
+print("mlp save")
+
+cur.execute('INSERT INTO model_runs(run_date, model_name, macro_f1, notes) VALUES(?,?,?,?)',
+            (datetime.date.today().isoformat(), config.MODEL_NAME_LOG, LogReg_result['macro avg']['f1-score'], " First version  Logistic Regression" )) # type: ignore
+print("logreg saved")
+
+con.commit()
