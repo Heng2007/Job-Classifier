@@ -41,6 +41,8 @@ A personal tool that classifies job postings, scores them against my current ski
 | **accuracy** | | | 0.94 | 1328 |
 | **macro avg** | 0.78 | 0.73 | 0.75 | 1328 |
 | **weighted avg** | 0.94 | 0.94 | 0.94 | 1328 |
+* A third of `Research assistant` posts get misidentified as `Not relevant`
+
 
 ## Limitations
 1. Since the original category, `NLP / LLM` and `Machain Learning`, are hard to differ. They are collapsed into one category, the cost is that the model can no longer find a job specicifically for `NLP / LLM` or specifically for `Machain Learning`. 
