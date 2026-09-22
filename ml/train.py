@@ -27,7 +27,9 @@ import torch.nn as nn
 import numpy as np
 import joblib
 import datetime
+import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset, DataLoader
+from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -169,3 +171,10 @@ cur.execute('INSERT INTO model_runs(run_date, model_name, macro_f1, notes) VALUE
 print("logreg saved")
 
 con.commit()
+
+
+
+
+# Generate the confusion matrix-----------------------------------------
+matrix = confusion_matrix(y_test_tensor, predictions, normalize= "true")
+print(matrix)
