@@ -38,6 +38,11 @@ LLM_LABELED_DATA = "data/processed/llm_labels.csv"
 LABEL_CORRECTIONS_DATA = "data/processed/label_corrections.csv"
 FINAL_LABELS_DATA = "data/processed/labels_final.csv"
 
+# --- Saved model artifacts ---
+VECTORIZER_PATH = "models/vectorizer.joblib"
+MLP_MODEL_PATH = "models/mlp.joblib"
+LABEL_ENCODER_PATH = "models/encoder.joblib"
+
 
 # --- Database ---
 DB_FILENAME = "jobintel.sqlite"

@@ -21,6 +21,7 @@ reloads and predicts on a fresh posting.
 import sys 
 from pathlib import Path
 import pandas as pd
+import optuna
 import sqlite3
 import torch
 import torch.nn as nn
@@ -99,6 +100,8 @@ torch.manual_seed(config.RANDOM_SEED)
 
 #The basic multilayer perception model
 #Sequential replaced the class and forward()
+
+
 mlp_model = nn.modules.Sequential(nn.Linear(len(x_train_tensor[1]), 256),
                                   nn.ReLU(),
                                   nn.Linear(256,64),
