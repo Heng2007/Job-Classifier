@@ -42,6 +42,14 @@ FINAL_LABELS_DATA = "data/processed/labels_final.csv"
 VECTORIZER_PATH = "models/vectorizer.joblib"
 MLP_MODEL_PATH = "models/mlp.joblib"
 LABEL_ENCODER_PATH = "models/encoder.joblib"
+TUNED_MLP_MODEL_PATH = "models/mlp_tuned.joblib"
+TUNED_VECTORIZER_PATH = "models/vectorizer_tuned.joblib"
+
+# --- Optuna tuning (ml/tune.py) ---
+TUNING_N_TRIALS = 50
+TUNING_CV_FOLDS = 3
+TUNING_HISTORY_PLOT_PATH = "optuna_history.png"
+MODEL_NAME_MLP_TUNED = "Multilayer Perceptron (tuned)"
 
 
 # --- Database ---

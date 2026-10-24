@@ -59,6 +59,7 @@ vectorizer = TfidfVectorizer()
 fitted_x_train = vectorizer.fit_transform(X_train)
 fitted_x_test = vectorizer.transform(X_test)
 
+
 joblib.dump(vectorizer, config.MODELS_DIR +'/vectorizer.joblib')
 
 

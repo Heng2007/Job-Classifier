@@ -20,7 +20,6 @@ analysis/match_scoring.py
 analysis/semantic_search.py
 app/streamlit_app.py
 ml/embeddings.py
-ml/tune.py
 pipeline/weekly_update.py
 tests/test_combine.py
 tests/test_database.py
