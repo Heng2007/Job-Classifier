@@ -36,6 +36,7 @@ SKILL_PATTERNS: dict[str, str] = {
     "SQL": r"\bsql\b",
     "Java": r"\bjava\b(?!script)",
     "C++": r"c\+\+",
+    "C": r"(?<![a-z0-9])c(?![a-z0-9+#-])",
     "Julia": r"\bjulia\b",
     "MATLAB": r"\bmatlab\b",
     "Stata": r"\bstata\b",
@@ -67,10 +68,16 @@ SKILL_PATTERNS: dict[str, str] = {
     # Data / databases / viz
     "Pandas": r"\bpandas\b",
     "NumPy": r"\bnumpy\b",
+    "dbt": r"\bdbt\b",
+    "Looker": r"\blooker\b",
+    "Snowflake": r"\bsnowflake\b",
     "Elasticsearch": r"elasticsearch",
     "MongoDB": r"mongodb",
     "Tableau": r"\btableau\b",
+    "Airflow": r"\bairflow\b",
     "Power BI": r"power ?bi",
+    "Spark": r"\b(?:py)?spark\b",
+    "ETL": r"\betl\b|\belt\b|extract,? transform,? (?:and )?load",
     # Infra / engineering practice
     "Git": r"\bgit\b|github",
     "Linux": r"\blinux\b",
@@ -90,11 +97,11 @@ SKILL_TIER: dict[str, int] = {
     "SQL": 2, "R": 2, "PyTorch": 2, "TensorFlow": 2, "Neural Networks": 2,
     "NLP": 2, "NLTK": 2, "BERT": 2, "Transformers": 2,
     "HuggingFace": 3, "LLM": 3, "Generative AI": 3, "RAG": 3, "Prompt Engineering": 3,
-    "Reinforcement Learning": 3, "Bayesian Optimization": 3,
-    "CNN": 3, "RNN/LSTM": 3, "Autoencoder": 3, "Keras": 3,
-    "MATLAB": 4, "Julia": 4, "Stata": 4, "C++": 4, "Java": 4,
+    "Reinforcement Learning": 3, "Airflow":3, "ETL": 3, "Spark":3, "Bayesian Optimization": 3,
+    "CNN": 3, "RNN/LSTM": 3, "Autoencoder": 3, "snowflake":3, "dbt":3, "Keras": 3,
+    "MATLAB": 4, "C":4, "Julia": 4, "Stata": 4, "C++": 4, "Java": 4,
     "Elasticsearch": 4, "MongoDB": 4, "Tableau": 4, "Power BI": 4,
-    "Linux": 2, "AWS": 3, "Docker": 3, "SLURM/HPC": 4, "SVM": 2,
+    "Linux": 2, "AWS": 3, "Docker": 3, "Looker":4,"SLURM/HPC": 4, "SVM": 2,
 }
 
 CATEGORIES = config.CATEGORIES
