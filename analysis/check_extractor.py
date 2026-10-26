@@ -27,9 +27,17 @@ df = pd.read_sql_query("SELECT p.title, p.description, l.category FROM postings 
                      , conn)
 sample = df.groupby("category").sample(n=4, random_state=config.RANDOM_SEED)
 
-print(sample.keys())
+
 sample["skill"] = sample["description"].map(
     lambda x: skills_taxonomy.extract_skills(str(x)))
 path = Path("compare_skill.xlsx")
+checked_path = Path("updated_compare_skill.xlsx")
 
-sample.to_excel(path, index = False)
+if path.exists() and checked_path.exists():
+   print("Both file exist")
+elif(path.exists() and not checked_path.exists()):
+   sample.to_excel(checked_path, index = False)
+else:
+   sample.to_excel(path, index =False)
+
+

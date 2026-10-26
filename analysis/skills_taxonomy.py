@@ -47,6 +47,8 @@ SKILL_PATTERNS: dict[str, str] = {
     "Logistic Regression": r"logistic regression",
     "SVM": r"support vector machine|\bsvm\b",
     "Cross-validation": r"cross-validation|cross validation",
+    "Optimization": r"convex optimization|numerical optimization|mathematical optimization|linear programming|\bmilp?\b",
+
     # Deep learning
     "PyTorch": r"pytorch",
     "TensorFlow": r"tensorflow",
@@ -65,6 +67,12 @@ SKILL_PATTERNS: dict[str, str] = {
     "Generative AI": r"generative ai|genai",
     "RAG": r"retrieval.augmented generation|\brag\b",
     "Prompt Engineering": r"prompt engineering",
+    "Computer Vision": r"computer vision|\bopencv\b|image recognition|object detection",
+    "RLHF":    r"\brlhf\b|reinforcement learning from human feedback",
+    "Agentic AI":      r"\bagentic\b|\b(?:ai|llm|coding|autonomous) agents?\b|\bagent frameworks?\b",
+    "MCP":             r"\bmcp\b|model context protocol",
+    "LLM Evaluation":  r"\bevals\b|evaluation (?:and quality )?frameworks?|llm evaluation",
+    
     # Data / databases / viz
     "Pandas": r"\bpandas\b",
     "NumPy": r"\bnumpy\b",
@@ -78,12 +86,24 @@ SKILL_PATTERNS: dict[str, str] = {
     "Power BI": r"power ?bi",
     "Spark": r"\b(?:py)?spark\b",
     "ETL": r"\betl\b|\belt\b|extract,? transform,? (?:and )?load",
+    "Kafka": r"\bkafka\b",
+    "Flink": r"\bflink\b",
     # Infra / engineering practice
     "Git": r"\bgit\b|github",
     "Linux": r"\blinux\b",
     "AWS": r"\baws\b",
     "Docker": r"\bdocker\b",
     "SLURM/HPC": r"\bslurm\b|compute canada|high.performance computing",
+    "Kubernetes": r"\bkubernetes\b|\bk8s\b",
+    "Distributed Computing": r"distributed (?:computing|systems?|training)",
+      "AI Coding Tools": r"\bcursor\b(?! position)|claude code|\bcodex\b|\bcopilot\b",
+      "System Design":   r"systems? design",
+    #Front End
+    "React":   r"\breact(?:\.?js)?\b(?! (?:well|quickly|to|and adapt|appropriately|calmly|fast))",
+    "Angular": r"\bangular(?:\.?js)?\b",
+    "JavaScript": r"\bjavascript\b",
+    "HTML": r"\bhtml5?\b",
+    "CSS": r"\bcss\b",
     # Specialized
     "Reinforcement Learning": r"reinforcement learning|imitation learning",
     "Bayesian Optimization": r"bayesian optimization",
@@ -94,13 +114,14 @@ SKILL_TIER: dict[str, int] = {
     "Python": 1, "Pandas": 1, "NumPy": 1, "Git": 1,
     "Logistic Regression": 1, "Random Forest": 1, "XGBoost": 1, "Cross-validation": 1,
     "scikit-learn": 1,
-    "SQL": 2, "R": 2, "PyTorch": 2, "TensorFlow": 2, "Neural Networks": 2,
-    "NLP": 2, "NLTK": 2, "BERT": 2, "Transformers": 2,
-    "HuggingFace": 3, "LLM": 3, "Generative AI": 3, "RAG": 3, "Prompt Engineering": 3,
-    "Reinforcement Learning": 3, "Airflow":3, "ETL": 3, "Spark":3, "Bayesian Optimization": 3,
-    "CNN": 3, "RNN/LSTM": 3, "Autoencoder": 3, "snowflake":3, "dbt":3, "Keras": 3,
-    "MATLAB": 4, "C":4, "Julia": 4, "Stata": 4, "C++": 4, "Java": 4,
-    "Elasticsearch": 4, "MongoDB": 4, "Tableau": 4, "Power BI": 4,
+    "SQL": 2, "R": 2, "PyTorch": 2, "TensorFlow": 2, "Neural Networks": 2, "AI Coding Tools	":2,
+    "NLP": 2, "NLTK": 2, "BERT": 2, "Transformers": 2, "Computer Vision": 2, "System Design":2,
+    "HuggingFace": 3, "LLM": 3, "Generative AI": 3, "RAG": 3, "Prompt Engineering": 3, "MCP": 3, "Agentic AI": 3,
+    "Reinforcement Learning": 3,"RLHF":3, "Airflow":3, "ETL": 3, "Spark":3, "Bayesian Optimization": 3,
+    "LLM Evaluation": 3, "CNN": 3, "RNN/LSTM": 3, "REACT":3, "Distributed Computing":3,"Optimization":3,  
+    "Kafka": 3,  "Kubernetes":3, "Autoencoder": 3, "snowflake":3, "dbt":3, "Keras": 3,
+    "JavaScript":3, "HTML":3, "CSS":3, "MATLAB": 4, "C":4, "Angular":4, "Julia": 4, "Stata": 4, "C++": 4, 
+    "Java": 4, "Flink":4, "Elasticsearch": 4, "MongoDB": 4, "Tableau": 4, "Power BI": 4,
     "Linux": 2, "AWS": 3, "Docker": 3, "Looker":4,"SLURM/HPC": 4, "SVM": 2,
 }
 
