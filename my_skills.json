@@ -1,5 +1,4 @@
 {
-  "_comment": "Edit this file as you learn more -- classify_posting.py reads it to compute the 'missing skills for me' diff. Names must match the canonical names in skills_taxonomy.SKILL_PATTERNS.",
   "known_skills": [
     "Python",
     "Pandas",
