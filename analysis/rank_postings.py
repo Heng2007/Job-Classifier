@@ -53,11 +53,19 @@ import sqlite3
 import joblib
 import pandas as pd
 import torch
+from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_extraction.text import TfidfVectorizer 
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from analysis.skills_taxonomy import extract_skills
 import config
-mlp = joblib.load(config.MODELS_DIR+'/mlp.joblib', mmap_mode= "r")
+
+mlp = joblib.load(config.TUNED_MLP_MODEL_PATH)
+vectorizer = joblib.load(config.TUNED_VECTORIZER_PATH)
+encoder = joblib.load(config.LABEL_ENCODER_PATH)
+
+october= pd.read_csv(config.JOBS_CSV_PATH)
+
 
 def rank_postings(df: pd.DataFrame, my_skills: list):
     """external_id: a unique ID for the posting, used to remove duplicates and to skip jobs you've already seen.
@@ -66,15 +74,20 @@ def rank_postings(df: pd.DataFrame, my_skills: list):
        description: the full job description, in plain text with simple Markdown formatting.
        url: a link to the posting on Indeed or LinkedIn.
        fetched_at: when the script scraped it."""
-    df["description"] = df["description"].map(lambda skills: extract_skills(str(skills)))
+    df["skills"] = df["description"].map(lambda skills: extract_skills(str(skills)))
 
-def categorize(df:pd.DataFrame, mlp: torch.nn.Module):
+def categorize(df:pd.DataFrame, mlp: torch.nn.Module, vectorizer: TfidfVectorizer, encoder: LabelEncoder ):
+    """add a categorized column to the original dataframe"""
+    fitted_test = vectorizer.transform(df["title"]+" "+df["description"])
+    tensor_test = torch.tensor(fitted_test.todense(), dtype= torch.float32)
     mlp.eval()
- 
+    with torch.no_grad():
+        prediction = mlp(tensor_test).argmax(dim = 1)
+    encoded_result = encoder.inverse_transform(prediction)
+    df["category"] = encoded_result
+    df["relevant"] = (df["category"] != config.NOT_RELEVANT_CATEGORY) | df["title"].str.contains(config.TECH_TITLE_PATTERN, case=False)
 
 
-
-
-
-
+categorize(october, mlp, vectorizer, encoder)
+print(october)
 

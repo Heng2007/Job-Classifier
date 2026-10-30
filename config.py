@@ -22,6 +22,7 @@ DB_DIR = "db"
 MODELS_DIR = "models"
 SCHEMA_PATH = "db/schema.sql"
 SKILLS_PROFILE_PATH = "my_skills.json"
+JOBS_CSV_PATH = "/Users/h3ng/Documents/Projects/Job Tracing/jobs_csv/2026 October/internships_gta_2026-10-29.csv"
 SEED_LABELS_PATH = "seed_labels.csv"
 GREENHOUSE_TOKENS_PATH = "data/raw/greenhouse_tokens.txt"
 KAGGLE_INPUT_DATA = "data/raw/postings.csv"        
@@ -91,6 +92,12 @@ MODEL_NAME_LOG = "Logistic Regression"
 # --- Junior-eligibility title regexes (Streamlit tab 2 filter) ---
 JUNIOR_TITLE_PATTERN = r"\b(?:intern|interns|internship|internships|junior|new grad|new graduate|research assistant)\b"
 SENIOR_TITLE_PATTERN = r"\b(?:senior|sr|staff|principal|lead)\b"
+
+# --- Tech-title fallback (rank_postings relevance) ---
+# The classifier labels 36 of 67 software/ML/data-titled postings in the
+# 2026-10 GTA internship CSV "Not relevant", so a posting is kept if the model
+# says relevant OR its title matches this.
+TECH_TITLE_PATTERN = r"\b(?:software|developer|data|machine learning|ml|ai|engineer(?:ing)?)\b"
 
 # --- Near-miss threshold (match_scoring) ---
 NEAR_MISS_MAX_MISSING_SKILLS = 2

@@ -21,7 +21,6 @@ reloads and predicts on a fresh posting.
 import sys 
 from pathlib import Path
 import pandas as pd
-import optuna
 import sqlite3
 import torch
 import torch.nn as nn
