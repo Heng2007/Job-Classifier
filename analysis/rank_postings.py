@@ -46,3 +46,35 @@ requiring none of them scores 0.0, one with no detected skills scores 0 without
 crashing, extra input columns survive into the output, and with the classifier
 on, the top of the ranking is no longer full of Account Executive roles.
 """
+
+import sys
+import json
+import sqlite3
+import joblib
+import pandas as pd
+import torch
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from analysis.skills_taxonomy import extract_skills
+import config
+mlp = joblib.load(config.MODELS_DIR+'/mlp.joblib', mmap_mode= "r")
+
+def rank_postings(df: pd.DataFrame, my_skills: list):
+    """external_id: a unique ID for the posting, used to remove duplicates and to skip jobs you've already seen.
+       company: the employer's name.
+       title: the job title.
+       description: the full job description, in plain text with simple Markdown formatting.
+       url: a link to the posting on Indeed or LinkedIn.
+       fetched_at: when the script scraped it."""
+    df["description"] = df["description"].map(lambda skills: extract_skills(str(skills)))
+
+def categorize(df:pd.DataFrame, mlp: torch.nn.Module):
+    mlp.eval()
+ 
+
+
+
+
+
+
+
