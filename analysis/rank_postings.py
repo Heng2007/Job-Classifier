@@ -33,7 +33,6 @@ import config
 mlp = joblib.load(config.TUNED_MLP_MODEL_PATH)
 vectorizer = joblib.load(config.TUNED_VECTORIZER_PATH)
 encoder = joblib.load(config.LABEL_ENCODER_PATH)
-
 october= pd.read_csv(config.JOBS_CSV_PATH)
 
 #import my skills and convert it into list
@@ -73,8 +72,6 @@ def junior_filter(df:pd.DataFrame):
     df["pattern"] = df["title"].map(lambda title: "Senior" if re.search(config.SENIOR_TITLE_PATTERN, str(title), re.IGNORECASE) 
                                     else ("Junior" if re.search(config.JUNIOR_TITLE_PATTERN, str(title), re.IGNORECASE) 
                                           else "Not Verified"))
-    
-
 
 def fitted_excel(df: pd.DataFrame, top_postings: int, Junior: bool):
   categorize(df, mlp, vectorizer, encoder)
@@ -89,9 +86,14 @@ def fitted_excel(df: pd.DataFrame, top_postings: int, Junior: bool):
       df = df.head(top_postings)
   df = df.drop(["external_id", "relevant", "skills","matched","pattern"], axis = 1)
   print(df)
+  Path(config.FITTED_POSTS_DIR).mkdir(exist_ok=True)
   df.to_excel(Path(config.FITTED_POSTS_DIR) / f"{datetime.now():%Y-%m-%d_%H-%M-%S}.xlsx", index = False)
 
-fitted_excel(october, 10, True)
+
+
+
+
+fitted_excel(october, 30, True)
 
 
     
