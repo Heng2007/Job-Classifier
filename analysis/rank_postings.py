@@ -1,20 +1,18 @@
-r"""Rank any table of job postings by how well they fit my skills.
+"""Find the job postings that best fit your skills.
 
-Responsible for: taking a DataFrame of postings from any source, detecting the
-skills each one asks for, scoring how much of that set I already have, and
-returning the postings ranked best-fit first. Also the two filters that decide
-which postings are worth ranking at all: the relevance classifier and the
-junior-eligibility title filter.
+Run from the project root: python -m analysis.rank_postings
 
-Outputs: a copy of the input with columns added:
-  skills        set of skills detected in title + description
-  matched       skills I have
-  missing       skills it wants that I don't have
-  match_score   len(matched) / len(skills); 0 when no skills were detected
-  category      predicted category from the tuned MLP
-sorted by match_score, then by len(matched) so a posting that names one skill
-does not outrank one that names five I all have.
+1. Set JOBS_CSV_PATH in config.py to your postings CSV
+   (columns: external_id, company, title, description, url, fetched_at).
+2. Pick your skills by number when prompted, or press Enter to reuse
+   the ones saved in my_skills.json.
+3. The top postings are saved as an Excel file in fitted_posts/,
+   named by date and time.
 
+How it ranks: the tuned MLP drops non-tech postings, titles mark each
+posting Junior / Senior / Not Verified, and postings are sorted by how
+many of your skills they name, then by match_score (share of the
+posting's skills you have).
 """
 import re
 import sys
@@ -27,18 +25,37 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer 
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from analysis.skills_taxonomy import extract_skills
+from analysis.skills_taxonomy import extract_skills, SKILL_PATTERNS
 import config
 
 mlp = joblib.load(config.TUNED_MLP_MODEL_PATH)
 vectorizer = joblib.load(config.TUNED_VECTORIZER_PATH)
 encoder = joblib.load(config.LABEL_ENCODER_PATH)
-october= pd.read_csv(config.JOBS_CSV_PATH)
+dataset = pd.read_csv(config.JOBS_CSV_PATH)
 
 #import my skills and convert it into list
 with open(config.SKILLS_PROFILE_PATH) as f:
     load = json.load(f)
 my_skill_list = load["known_skills"]
+
+
+def choose_skills(saved: list) -> list:
+    """print every skill with a number, let the user type the numbers they have;
+    pressing Enter keeps the saved list. New picks are saved to the json file."""
+    all_skills = list(SKILL_PATTERNS)
+    for i, skill in enumerate(all_skills, 1):
+        print(f"{i:>2}. {skill}")
+    print(f"\nSaved skills: {', '.join(saved)}")
+    answer = input("Type the numbers of your skills (e.g. 1, 4, 17), or press Enter to keep the saved ones: ")
+    if not answer.strip():
+        return saved
+    chosen = [all_skills[int(n) - 1] for n in answer.replace(",", " ").split()]
+    with open(config.SKILLS_PROFILE_PATH, "w") as f:
+        json.dump({"known_skills": chosen}, f, indent=2)
+    return chosen
+
+
+my_skill_list = choose_skills(my_skill_list)
 
 
 def rank_postings(df: pd.DataFrame, my_skills: list):
@@ -93,7 +110,7 @@ def fitted_excel(df: pd.DataFrame, top_postings: int, Junior: bool):
 
 
 
-fitted_excel(october, 30, True)
+fitted_excel(dataset, 30, True)
 
 
     
